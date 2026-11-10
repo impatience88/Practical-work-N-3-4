@@ -1,0 +1,291 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Электронный журнал</title>
+  <link rel="stylesheet" href="assets/bootstrap.min.css">
+  <style>
+    body { background: #f5f6f8; }
+    .page-title { margin-top: 28px; }
+    .table th, .table td { vertical-align: middle; }
+    .student-name { color: #0d6efd; cursor: pointer; }
+    .student-name:hover { text-decoration: underline; }
+    .small-note { color: #6c757d; font-size: 14px; }
+    footer { margin-top: 40px; padding: 18px 0; color: #6c757d; border-top: 1px solid #dee2e6; }
+    @media (max-width: 575px) {
+      .page-title { margin-top: 20px; }
+      .table { font-size: 14px; }
+    }
+  </style>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+  <div class="container">
+    <a class="navbar-brand" href="#">Электронный журнал</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainMenu" aria-controls="mainMenu" aria-expanded="false" aria-label="Открыть меню">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="mainMenu">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item"><a class="nav-link active" href="#journal">Журнал</a></li>
+        <li class="nav-item"><a class="nav-link" href="#about">О проекте</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<main class="container">
+  <div class="page-title">
+    <h1 class="h3 mb-2">Журнал посещаемости и оценок</h1>
+    <p class="text-secondary">Группа 24ВЕБ. Здесь преподаватель может отмечать посещаемость и оценки студентов.</p>
+  </div>
+
+  <section class="card mb-4" aria-label="Фильтры журнала">
+    <div class="card-body">
+      <div class="row g-3 align-items-end">
+        <div class="col-md-3">
+          <label for="groupSelect" class="form-label">Группа</label>
+          <select id="groupSelect" class="form-select">
+            <option>24ВЕБ</option>
+            <option>24СИС</option>
+            <option>24ИСиП</option>
+          </select>
+        </div>
+        <div class="col-md-4">
+          <label for="subjectSelect" class="form-label">Предмет</label>
+          <select id="subjectSelect" class="form-select">
+            <option>Веб-разработка</option>
+            <option>Базы данных</option>
+            <option>Основы алгоритмизации</option>
+          </select>
+        </div>
+        <div class="col-md-3">
+          <label for="lessonDate" class="form-label">Дата занятия</label>
+          <input id="lessonDate" class="form-control" type="date" value="2026-11-10">
+        </div>
+        <div class="col-md-2 d-grid">
+          <button class="btn btn-primary" id="saveButton" type="button">Сохранить</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="journal" class="card mb-4">
+    <div class="card-header bg-white d-flex flex-wrap justify-content-between align-items-center gap-2">
+      <div>
+        <h2 class="h5 mb-1">Список студентов</h2>
+        <div class="small-note">Нажмите на имя, чтобы посмотреть информацию о студенте.</div>
+      </div>
+      <div class="d-flex flex-wrap gap-2">
+        <input class="form-control" id="searchInput" type="search" placeholder="Поиск студента" aria-label="Поиск студента">
+        <button class="btn btn-outline-primary" type="button" data-bs-toggle="modal" data-bs-target="#addModal">Добавить</button>
+      </div>
+    </div>
+    <div class="table-responsive">
+      <table class="table table-striped table-hover mb-0" id="journalTable">
+        <thead class="table-light">
+          <tr>
+            <th scope="col">№</th>
+            <th scope="col">ФИО студента</th>
+            <th scope="col">Посещаемость</th>
+            <th scope="col">Оценка</th>
+            <th scope="col">Комментарий</th>
+          </tr>
+        </thead>
+        <tbody id="studentRows">
+          <tr data-student="Иванов Артём Сергеевич" data-phone="+7 900 000-00-01" data-email="ivanov@example.com">
+            <td>1</td><td><span class="student-name">Иванов Артём Сергеевич</span></td>
+            <td><select class="form-select form-select-sm attendance"><option>Был</option><option>Н</option><option>У</option><option>Опоздал</option></select></td>
+            <td><select class="form-select form-select-sm grade"><option>5</option><option>4</option><option>3</option><option>2</option><option>-</option></select></td>
+            <td><input class="form-control form-control-sm comment" value="" placeholder="Комментарий"></td>
+          </tr>
+          <tr data-student="Петрова Мария Андреевна" data-phone="+7 900 000-00-02" data-email="petrova@example.com">
+            <td>2</td><td><span class="student-name">Петрова Мария Андреевна</span></td>
+            <td><select class="form-select form-select-sm attendance"><option>Был</option><option>Н</option><option>У</option><option>Опоздал</option></select></td>
+            <td><select class="form-select form-select-sm grade"><option>4</option><option>5</option><option>3</option><option>2</option><option>-</option></select></td>
+            <td><input class="form-control form-control-sm comment" value="" placeholder="Комментарий"></td>
+          </tr>
+          <tr data-student="Сидоров Максим Олегович" data-phone="+7 900 000-00-03" data-email="sidorov@example.com">
+            <td>3</td><td><span class="student-name">Сидоров Максим Олегович</span></td>
+            <td><select class="form-select form-select-sm attendance"><option>Был</option><option selected>Н</option><option>У</option><option>Опоздал</option></select></td>
+            <td><select class="form-select form-select-sm grade"><option selected>-</option><option>5</option><option>4</option><option>3</option><option>2</option></select></td>
+            <td><input class="form-control form-control-sm comment" value="Не был на занятии" placeholder="Комментарий"></td>
+          </tr>
+          <tr data-student="Смирнова Анна Игоревна" data-phone="+7 900 000-00-04" data-email="smirnova@example.com">
+            <td>4</td><td><span class="student-name">Смирнова Анна Игоревна</span></td>
+            <td><select class="form-select form-select-sm attendance"><option>Был</option><option>Н</option><option>У</option><option>Опоздал</option></select></td>
+            <td><select class="form-select form-select-sm grade"><option>5</option><option>4</option><option>3</option><option>2</option><option>-</option></select></td>
+            <td><input class="form-control form-control-sm comment" value="" placeholder="Комментарий"></td>
+          </tr>
+          <tr data-student="Кузнецов Даниил Павлович" data-phone="+7 900 000-00-05" data-email="kuznetsov@example.com">
+            <td>5</td><td><span class="student-name">Кузнецов Даниил Павлович</span></td>
+            <td><select class="form-select form-select-sm attendance"><option>Был</option><option>Н</option><option>У</option><option>Опоздал</option></select></td>
+            <td><select class="form-select form-select-sm grade"><option>3</option><option>5</option><option>4</option><option>2</option><option>-</option></select></td>
+            <td><input class="form-control form-control-sm comment" value="" placeholder="Комментарий"></td>
+          </tr>
+          <tr data-student="Волкова Екатерина Романовна" data-phone="+7 900 000-00-06" data-email="volkova@example.com">
+            <td>6</td><td><span class="student-name">Волкова Екатерина Романовна</span></td>
+            <td><select class="form-select form-select-sm attendance"><option>Был</option><option>Н</option><option selected>У</option><option>Опоздал</option></select></td>
+            <td><select class="form-select form-select-sm grade"><option selected>-</option><option>5</option><option>4</option><option>3</option><option>2</option></select></td>
+            <td><input class="form-control form-control-sm comment" value="Справка" placeholder="Комментарий"></td>
+          </tr>
+          <tr data-student="Морозов Егор Алексеевич" data-phone="+7 900 000-00-07" data-email="morozov@example.com">
+            <td>7</td><td><span class="student-name">Морозов Егор Алексеевич</span></td>
+            <td><select class="form-select form-select-sm attendance"><option>Был</option><option>Н</option><option>У</option><option>Опоздал</option></select></td>
+            <td><select class="form-select form-select-sm grade"><option>4</option><option>5</option><option>3</option><option>2</option><option>-</option></select></td>
+            <td><input class="form-control form-control-sm comment" value="" placeholder="Комментарий"></td>
+          </tr>
+          <tr data-student="Фёдорова Полина Дмитриевна" data-phone="+7 900 000-00-08" data-email="fedorova@example.com">
+            <td>8</td><td><span class="student-name">Фёдорова Полина Дмитриевна</span></td>
+            <td><select class="form-select form-select-sm attendance"><option>Был</option><option>Н</option><option>У</option><option>Опоздал</option></select></td>
+            <td><select class="form-select form-select-sm grade"><option>5</option><option>4</option><option>3</option><option>2</option><option>-</option></select></td>
+            <td><input class="form-control form-control-sm comment" value="" placeholder="Комментарий"></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="card-footer bg-white d-flex flex-wrap justify-content-between gap-2">
+      <span class="small-note" id="studentCount">Всего студентов: 8</span>
+      <button class="btn btn-sm btn-outline-secondary" id="exportButton" type="button">Скачать таблицу</button>
+    </div>
+  </section>
+
+  <section id="about" class="card">
+    <div class="card-body">
+      <h2 class="h5">О проекте</h2>
+      <p class="mb-0">Это учебный прототип электронного журнала. В нём можно выбрать группу и предмет, отметить посещаемость, выставить оценку и оставить комментарий. Данные приведены для примера и сохраняются только в текущей странице.</p>
+    </div>
+  </section>
+
+  <footer class="text-center">Практическая работа по дисциплине «Проектирование и дизайн интерфейсов»</footer>
+</main>
+
+<div class="modal fade" id="addModal" tabindex="-1" aria-labelledby="addModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <form class="modal-content" id="addStudentForm">
+      <div class="modal-header">
+        <h2 class="modal-title fs-5" id="addModalLabel">Добавить студента</h2>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+      </div>
+      <div class="modal-body">
+        <label class="form-label" for="newStudentName">ФИО студента</label>
+        <input class="form-control" id="newStudentName" required placeholder="Фамилия Имя Отчество">
+        <div class="mt-3">
+          <label class="form-label" for="newStudentEmail">E-mail</label>
+          <input class="form-control" id="newStudentEmail" type="email" placeholder="student@example.com">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+        <button type="submit" class="btn btn-primary">Добавить</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="modal fade" id="studentModal" tabindex="-1" aria-labelledby="studentModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title fs-5" id="studentModalLabel">Информация о студенте</h2>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+      </div>
+      <div class="modal-body">
+        <p><strong>ФИО:</strong> <span id="infoName"></span></p>
+        <p><strong>Телефон:</strong> <span id="infoPhone"></span></p>
+        <p class="mb-0"><strong>E-mail:</strong> <span id="infoEmail"></span></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast-container position-fixed bottom-0 end-0 p-3">
+  <div id="saveToast" class="toast" role="status" aria-live="polite" aria-atomic="true">
+    <div class="toast-header">
+      <strong class="me-auto">Электронный журнал</strong>
+      <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Закрыть"></button>
+    </div>
+    <div class="toast-body">Изменения сохранены в демонстрационном режиме.</div>
+  </div>
+</div>
+
+<script src="assets/bootstrap.bundle.min.js"></script>
+<script>
+  const rows = document.getElementById('studentRows');
+  const searchInput = document.getElementById('searchInput');
+  const studentCount = document.getElementById('studentCount');
+
+  function updateCount() {
+    const count = rows.querySelectorAll('tr').length;
+    studentCount.textContent = 'Всего студентов: ' + count;
+  }
+
+  searchInput.addEventListener('input', function () {
+    const value = this.value.trim().toLowerCase();
+    rows.querySelectorAll('tr').forEach(function (row) {
+      row.hidden = !row.dataset.student.toLowerCase().includes(value);
+    });
+  });
+
+  rows.addEventListener('click', function (event) {
+    if (!event.target.classList.contains('student-name')) return;
+    const row = event.target.closest('tr');
+    document.getElementById('infoName').textContent = row.dataset.student;
+    document.getElementById('infoPhone').textContent = row.dataset.phone || 'Не указан';
+    document.getElementById('infoEmail').textContent = row.dataset.email || 'Не указан';
+    bootstrap.Modal.getOrCreateInstance(document.getElementById('studentModal')).show();
+  });
+
+  document.getElementById('addStudentForm').addEventListener('submit', function (event) {
+    event.preventDefault();
+    const name = document.getElementById('newStudentName').value.trim();
+    const email = document.getElementById('newStudentEmail').value.trim();
+    if (!name) return;
+    const number = rows.querySelectorAll('tr').length + 1;
+    const row = document.createElement('tr');
+    row.dataset.student = name;
+    row.dataset.phone = '';
+    row.dataset.email = email;
+    row.innerHTML = `
+      <td>${number}</td>
+      <td><span class="student-name"></span></td>
+      <td><select class="form-select form-select-sm attendance"><option>Был</option><option>Н</option><option>У</option><option>Опоздал</option></select></td>
+      <td><select class="form-select form-select-sm grade"><option>-</option><option>5</option><option>4</option><option>3</option><option>2</option></select></td>
+      <td><input class="form-control form-control-sm comment" placeholder="Комментарий"></td>`;
+    row.querySelector('.student-name').textContent = name;
+    rows.appendChild(row);
+    this.reset();
+    bootstrap.Modal.getOrCreateInstance(document.getElementById('addModal')).hide();
+    updateCount();
+  });
+
+  document.getElementById('saveButton').addEventListener('click', function () {
+    bootstrap.Toast.getOrCreateInstance(document.getElementById('saveToast')).show();
+  });
+
+  document.getElementById('exportButton').addEventListener('click', function () {
+    const data = [['№', 'ФИО', 'Посещаемость', 'Оценка', 'Комментарий']];
+    rows.querySelectorAll('tr').forEach(function (row) {
+      data.push([
+        row.cells[0].textContent.trim(),
+        row.dataset.student,
+        row.querySelector('.attendance').value,
+        row.querySelector('.grade').value,
+        row.querySelector('.comment').value
+      ]);
+    });
+    const csv = '\uFEFF' + data.map(line => line.map(value => '"' + String(value).replaceAll('"', '""') + '"').join(';')).join('\n');
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'journal.csv';
+    link.click();
+    URL.revokeObjectURL(url);
+  });
+
+  updateCount();
+</script>
+</body>
+</html>
